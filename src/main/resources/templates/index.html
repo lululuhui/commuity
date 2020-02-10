@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
     <script src="js/bootstrap.min.js"></script>
+<!--    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>-->
 
 <!--
     &lt;!&ndash; 最新版本的 Bootstrap 核心 CSS 文件 &ndash;&gt;
@@ -41,7 +42,7 @@
 
                 <li class="dropdown" th:if="${session.user != null}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                   aria-expanded="false" th:text="${session.user.getLogin()}"><span class="caret"></span></a>
+                   aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#">消息中心</a></li>
                     <li><a href="#">个人资料</a></li>
