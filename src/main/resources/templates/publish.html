@@ -1,30 +1,23 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>社区-案例</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>发布-社区-案例</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="js/jquery.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/community.css"/>
     <script src="js/bootstrap.min.js"></script>
-<!--    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>-->
 
-<!--
-    &lt;!&ndash; 最新版本的 Bootstrap 核心 CSS 文件 &ndash;&gt;
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    &lt;!&ndash; 可选的 Bootstrap 主题文件（一般不用引入） &ndash;&gt;
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    &lt;!&ndash; 最新的 Bootstrap 核心 JavaScript 文件 &ndash;&gt;
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
--->
 
 </head>
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">社区-实例</span>
             </button>
             <a class="navbar-brand" href="#">社区-案例</a>
@@ -41,19 +34,111 @@
             <ul class="nav navbar-nav navbar-right">
 
                 <li class="dropdown" th:if="${session.user != null}">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                   aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">消息中心</a></li>
-                    <li><a href="#">个人资料</a></li>
-                    <li><a href="#">退出登入</a></li>
-                </ul>
-            </li>
-                <li th:if=" ${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect_uri=http://localhost:8080/callback&state=1">登入</a></li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">消息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#">退出登入</a></li>
+                    </ul>
+                </li>
+                <li th:if=" ${session.user == null}"><a
+                        href="https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect_uri=http://localhost:8080/callback&state=1">登入</a>
+                </li>
 
             </ul>
         </div>
     </div>
+
+
 </nav>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
+            <hr size="4px" color="black">
+
+                <div class="form-group">
+                    <label for="title">问题标题</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题">
+                </div>
+                <div class="form-group">
+                    <label for="description">问题补充</label>
+                    <textarea name="description" class="form-control" id="description" cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="title">添加标签</label>
+                    <input type="text" class="form-control" id="tag" name="tag" placeholder="输入标签。以，(逗号)分隔">
+                </div>
+            <div class="hidden" role="alert" id="error" >请先登入</div>
+            <div class="hidden" role="alert" id="success">发布成功</div>
+            <div class="hidden" role="alert" id="w_tag">请输入标签</div>
+            <div class="hidden" role="alert" id="w_title">请输入标题</div>
+            <div class="hidden" role="alert" id="w_description">请输入问题补充</div>
+                <button type="submit" class="btn btn-success btn-publish" id="btn_publish">发布</button>
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>问题发起指南</h3>
+            •问题标题：请用简介的语言描述您发布的问题，不超过25字</br>
+            •问题补充：详细补充您的问题内容，并确保问题描述清晰直观，并提供一些相关的资料</br>
+            •选择标签：选择一个或多个合适的标签，用逗号隔开，每个标签不超过10个字</br>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript">
+
+
+    $("#btn_publish").click(function () {
+        var title =$("#title").val();
+        var tag =$("#tag").val();
+        var description =$("#description").val();
+        var question = {"title":title,"tag":tag,"description":description};
+
+        if (title==""){
+            $("#w_title").attr("class","alert alert-warning");
+            return;
+        }else {
+            $("#w_title").attr("class","hidden");
+        }
+        if (description==""){
+            $("#w_description").attr("class","alert alert-warning");
+            return;
+        }else {
+            $("#w_description").attr("class","hidden");
+        }
+        if (tag==""){
+            $("#w_tag").attr("class","alert alert-warning");
+            return;
+        }else {
+            $("#w_tag").attr("class","hidden");
+        }
+
+        $.ajax({
+            type:"post",
+            url:"/publish",
+            async:true,
+            contentType:"application/json",
+            data:JSON.stringify(question),
+            success:function(data){
+
+                console.log(data)
+                console.log(question);
+                if (data.info=="0"){
+                    $("#error").attr("class","alert alert-danger")
+                }
+                if (data.info=="1"){
+                    $("#success").attr("class","alert alert-success")
+                }
+            },
+            error:function () {
+                alert("系统传输错误！");
+            }
+        });
+    })
+
+
+
+</script>
 </html>

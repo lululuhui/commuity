@@ -78,6 +78,14 @@
             <version>8.0.19</version>
         </dependency>
 
+<!--        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.2.4</version>
+        </dependency>-->
+
+
+
     </dependencies>
 
     <build>
@@ -86,6 +94,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+<!--            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.2.4</version>
+                <configuration>
+                    <user>root</user>
+                    <password>123456</password>
+                    <url>jdbc:mysql://localhost:3306/mp?serverTimezone=GMT%2B8</url>
+                    <driver>com.mysql.cj.jdbc.Driver</driver>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
 
