@@ -7,6 +7,15 @@ public class User {
     private String token;
     private Long gmtCreate;
     private Long gmtModified;
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public Integer getId() {
         return id;
@@ -65,6 +74,8 @@ public class User {
                 ", token='" + token + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
+                ", img='" + img + '\'' +
                 '}';
     }
+
 }

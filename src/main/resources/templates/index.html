@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>社区-案例</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="js/jquery.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/community.css"/>
     <script src="js/bootstrap.min.js"></script>
 <!--    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>-->
 
@@ -26,7 +27,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">社区-实例</span>
+                <span class="sr-only"><a href="/">社区-实例</a></span>
             </button>
             <a class="navbar-brand" href="#">社区-案例</a>
         </div>
@@ -57,5 +58,34 @@
         </div>
     </div>
 </nav>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> <span style="font-size: 34px">发现</span></h2>
+            <hr size="4px" color="black">
+
+            <div class="media" th:each="question : ${questions}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded" th:src="${question.user.getImg()}"/>
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading span_d" th:text="${question.getTitle()}"></h4>
+                    <span class="span_d" th:text="${question.getDescription()}"><br>
+                    </span> <span class="test-desc"><span th:text="${question.getCommentCount()}"></span>个回复 • <span th:text="${question.getViewCount()}"></span>次浏览 • <span th:text="${#dates.format(question.getGmtModified(),'dd MMMM yyyy')}"></span></span>
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>热门话题</h3>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
