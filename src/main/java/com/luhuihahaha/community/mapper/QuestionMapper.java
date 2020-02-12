@@ -23,4 +23,20 @@ public interface QuestionMapper {
 
     @Select("select count(1) from questions")
     public Integer count();
+
+    @Select("select count(1) from questions where creator = #{userId}")
+    Integer countByUserId(Integer userId);
+
+
+    @Select("select * from questions where creator=#{userId} limit #{offset},#{size}")
+    @Results({
+            @Result(property = "gmtCreate",column = "gmt_create"),
+            @Result(property = "gmtModified",column = "gmt_modified"),
+            @Result(property = "commentCount",column = "comment_count"),
+            @Result(property = "viewCount",column = "view_count"),
+            @Result(property = "likeCount",column = "like_count")
+    })
+    List<Question> lists(Integer userId, Integer offset, Integer size);
+
+
 }

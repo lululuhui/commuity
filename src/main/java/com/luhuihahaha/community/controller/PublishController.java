@@ -4,6 +4,7 @@ import com.luhuihahaha.community.mapper.QuestionMapper;
 import com.luhuihahaha.community.mapper.UserMapper;
 import com.luhuihahaha.community.model.Question;
 import com.luhuihahaha.community.model.User;
+import com.luhuihahaha.community.util.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
@@ -24,9 +24,12 @@ public class PublishController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private LoginUtil loginUtil;
+
     @GetMapping("/publish")
     public String publish(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
+/*        Cookie[] cookies = request.getCookies();
         if (cookies!=null)
             for(Cookie cookie : cookies){
                 if(cookie.getName().equals("token")){
@@ -37,8 +40,8 @@ public class PublishController {
                     }
                     break;
                 }
-            }
-        System.out.println("我执行了");
+            }*/
+        loginUtil.checkLogin(request);
         return "publish";
     }
 

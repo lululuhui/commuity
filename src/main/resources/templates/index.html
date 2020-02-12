@@ -8,23 +8,11 @@
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="css/community.css"/>
     <script src="js/bootstrap.min.js"></script>
-    <!--    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>-->
-
-    <!--
-        &lt;!&ndash; 最新版本的 Bootstrap 核心 CSS 文件 &ndash;&gt;
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-        &lt;!&ndash; 可选的 Bootstrap 主题文件（一般不用引入） &ndash;&gt;
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-        &lt;!&ndash; 最新的 Bootstrap 核心 JavaScript 文件 &ndash;&gt;
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    -->
 
 </head>
 <body>
 <!--引入公共部分-->
-<div th:insert="~{navigation :: nav}"></div>
+<div th:insert="~{commons/navigation :: nav}"></div>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
@@ -32,32 +20,8 @@
                     style="font-size: 34px">发现</span></h2>
             <hr size="4px" color="black">
 
-            <div class="media" th:each="question : ${pageDTo.getQuestionDTOS()}">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-rounded" th:src="${question.user.getImg()}"/>
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading span_d" th:text="${question.getTitle()}"></h4>
-                    <span class="span_d" th:text="${question.getDescription()}"><br>
-                    </span> <span class="test-desc"><span th:text="${question.getCommentCount()}"></span>个回复 • <span
-                        th:text="${question.getViewCount()}"></span>次浏览 • <span
-                        th:text="${#dates.format(question.getGmtModified(),'dd MMMM yyyy')}"></span></span>
-
-                </div>
-            </div>
-
-            <nav aria-label="Page navigation" style="float:right">
-                <ul class="pagination">
-                    <li ><a th:if="${pageDTo.getPage()!=1}" th:href="@{'?page='+'1'}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                    <li ><a th:if="${pageDTo.getPage()!=1}" th:href="@{'?page='+${pageDTo.getPage()-1}}" aria-label="Previous"><span aria-hidden="true">&larr;</span></a></li>
-                    <li th:each="page : ${pageDTo.pages}"><a  th:text="${page}" th:href="@{'?page='+${page}}"   th:style="${pageDTo.getPage()==page?'background-color: cornflowerblue':''}" > </a> </li>
-                    <li ><a th:if="${pageDTo.getPage()!=pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPage()+1}}" aria-label="Previous"><span aria-hidden="true">&rarr;</span></a></li>
-                    <li ><a th:if="${pageDTo.getPage()!=pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPageCount()}}" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
-                </ul>
-            </nav>
-        </div>
+            <!--引入列表部分-->
+            <div th:insert="~{commons/list :: list}"></div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>热门话题</h3>
         </div>

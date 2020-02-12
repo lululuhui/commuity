@@ -15,8 +15,6 @@ public class PageDTO {
 
     public void setPagintion(Integer totalCount, Integer page, Integer size) {
 
-
-
         pages = new ArrayList<>();
 
         if(totalCount % size == 0){

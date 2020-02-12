@@ -13,7 +13,7 @@
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only"><a href="/">社区-实例</a></span>
             </button>
-            <a class="navbar-brand" href="#">社区-案例</a>
+            <a class="navbar-brand" href="/">社区-案例</a>
         </div>
 
 
@@ -31,7 +31,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><span th:text="${session.user.getName()}"></span><span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/profile/problem">我的问题</a></li>
+                        <li><a href="/profile/questions">我的问题</a></li>
                            <li><a href="#">个人资料</a></li>
                         <li><a href="#">退出登入</a></li>
                     </ul>
@@ -43,6 +43,8 @@
             </ul>
         </div>
     </div>
-</nav></div>
+</nav>
+</div>
+
 </body>
 </html>

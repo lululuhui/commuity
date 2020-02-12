@@ -13,10 +13,10 @@ public interface UserMapper {
     @Select("select * from user where token = #{token}")
     public User findByToken(@Param("token") String token);
 
-    @Select("select * from user where id = #{id}")
+    @Select("select * from user where id = #{creator}")
     @Results({
             @Result(property = "gmtCreate",column = "gmt_create"),
             @Result(property = "gmtModified",column = "gmt_modified"),
     })
-    User findById(@Param("id") Integer creator);
+    User findById(@Param("creator") Integer creator);
 }
