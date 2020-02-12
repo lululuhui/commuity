@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${question.getTitle()}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--引入公共部分-->
+<div th:insert="~{commons/navigation :: nav}"></div>
+<div class="container-fluid main profile">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h4><span th:text="${question.getTitle()}"></span></h4>
+            <span class="test-desc">
+            作者: <span th:text="${question.getUser().getName()}"></span>	|
+            阅读数: <span th:text="${question.getViewCount()}"></span> 	    |
+            发布时间: <span th:text="${#dates.format(question.getGmtModified(),'yyyy年M月dd日')}"></span>
+            </span>
+            <hr>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.getDescription()}"></div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <a th:if="${user!=null && (user.getId() == question.getCreator())}" th:href="@{'/publish/'+${question.getId()}}"><span class="glyphicon glyphicon-pencil community-menu" aria-hidden="true">编辑</span></a>
+
+
+
+
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h4>发起人</h4>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" style="height: 39px;width: 39px"  th:src="${question.user.getImg()}"/>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h6 class="media-object span_d" style="font-size: 16px" th:text="${question.getUser().getName()}"></h6>
+                    </div>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h4>相关问题</h4>
+                </div>
+            </div>
+
+
+        </div>
+
+</body>
+</html>

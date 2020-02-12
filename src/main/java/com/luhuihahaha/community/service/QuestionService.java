@@ -67,4 +67,24 @@ public class QuestionService {
         return pageDTO;
 
     }
+
+    public QuestionDTO getById(Integer id) {
+        Question question = questionMapper.findById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        questionDTO.setUser(userMapper.findById(questionDTO.getCreator()));
+        return questionDTO;
+    }
+
+    public void createOrUpdate(Question question,String quesId) {
+
+       if (quesId == null){
+           questionMapper.create(question);
+       }else {
+           questionMapper.update(question.getTitle(),question.getDescription(),question.getTag(),System.currentTimeMillis(),Integer.valueOf(quesId));
+       }
+
+
+
+    }
 }

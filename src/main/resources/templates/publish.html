@@ -3,12 +3,11 @@
 <head>
     <title>发布-社区-案例</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="js/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="css/community.css"/>
-    <script src="js/bootstrap.min.js"></script>
-
+    <script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/jquery-1.12.4.js"></script>
 
 
 </head>
@@ -18,7 +17,7 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <span style="font-size: 36px">发起</span></h2>
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <span style="font-size: 36px" id="topTitle">发起</span></h2>
             <hr size="4px" color="black">
 
                 <div class="form-group">
@@ -27,7 +26,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description">问题补充</label>
-                    <textarea name="description" class="form-control" id="description" cols="30" rows="10"></textarea>
+                    <textarea name="description" placeholder="问题补充"  class="form-control" id="description" cols="30" rows="10"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="title">添加标签</label>
@@ -38,7 +37,7 @@
             <div class="hidden" role="alert" id="w_tag">请输入标签</div>
             <div class="hidden" role="alert" id="w_title">请输入标题</div>
             <div class="hidden" role="alert" id="w_description">请输入问题补充</div>
-                <button type="submit" class="btn btn-success btn-publish" id="btn_publish">发布</button>
+                <button type="submit" class="btn btn-success btn-publish" id="btn_publish" ></button>
 
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -52,12 +51,47 @@
 </body>
 <script type="text/javascript">
 
+    var quesId;
+
+    $(function () {
+        var allUrl ={ "allUrl" : window.location.href };
+        $.ajax({
+            type:"post",
+            url:"/getInfo",
+            async:true,
+            contentType:"application/json",
+            data:JSON.stringify(allUrl),
+            success:function(data){
+                console.log(data)
+
+                if (data.status=="0"){
+                    console.log("发布")
+                    $("#btn_publish").html("发布")
+                }
+                if (data.status=="1"){
+                    console.log("修改")
+                    $("#btn_publish").html("修改")
+                    $("#topTitle").html("修改")
+                    $("#success").html("修改成功")
+                    $("#title").attr("placeholder",data.title)
+                    $("#description").attr("placeholder",data.description)
+                    $("#tag").attr("placeholder",data.tag)
+                    quesId = data.quesId;
+                }
+            },
+            error:function () {
+                alert("系统传输错误！");
+            }
+        });
+    })
+
 
     $("#btn_publish").click(function () {
         var title =$("#title").val();
         var tag =$("#tag").val();
         var description =$("#description").val();
-        var question = {"title":title,"tag":tag,"description":description};
+        var question = {"title":title,"tag":tag,"description":description,"quesId":quesId};
+
 
         if (title==""){
             $("#w_title").attr("class","alert alert-warning");
@@ -87,6 +121,16 @@
         }
 
 
+        function sleep(numberMillis) {
+            var now = new Date();
+            var exitTime = now.getTime() + numberMillis;
+            while (true) {
+                now = new Date();
+                if (now.getTime() > exitTime)
+                    return;
+            }
+        }
+
         $.ajax({
             type:"post",
             url:"/publish",
@@ -103,6 +147,9 @@
                 if (data.info=="1"){
                     $("#success").attr("class","alert alert-success")
                 }
+
+                console.log("123").delay(1000*4)
+                $(location).attr('href', 'http://localhost:8080/')
             },
             error:function () {
                 alert("系统传输错误！");

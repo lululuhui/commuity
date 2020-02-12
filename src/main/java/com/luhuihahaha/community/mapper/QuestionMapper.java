@@ -39,4 +39,16 @@ public interface QuestionMapper {
     List<Question> lists(Integer userId, Integer offset, Integer size);
 
 
+    @Select("select * from questions where id = #{id}")
+    @Results({
+            @Result(property = "gmtCreate",column = "gmt_create"),
+            @Result(property = "gmtModified",column = "gmt_modified"),
+            @Result(property = "commentCount",column = "comment_count"),
+            @Result(property = "viewCount",column = "view_count"),
+            @Result(property = "likeCount",column = "like_count")
+    })
+    Question findById(@Param("id") Integer id);
+
+    @Update("update questions set title=#{title},description=#{description},tag=#{tag},gmt_modified=#{gmtModified} where id = #{id}")
+    void update(String title ,String description,String tag,Long gmtModified,Integer id);
 }

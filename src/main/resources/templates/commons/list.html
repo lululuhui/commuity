@@ -13,12 +13,13 @@
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading span_d" th:text="${question.getTitle()}"></h4>
+            <h4 class="media-heading span_d">
+                <a  th:href="@{'/question/'+${question.getId()}}" th:text="${question.getTitle()}"></a>
+            </h4>
             <span class="span_d" th:text="${question.getDescription()}"><br>
                     </span> <span class="test-desc"><span th:text="${question.getCommentCount()}"></span>个回复 • <span
                 th:text="${question.getViewCount()}"></span>次浏览 • <span
                 th:text="${#dates.format(question.getGmtModified(),'dd MMMM yyyy')}"></span></span>
-
         </div>
     </div>
     <nav aria-label="Page navigation">

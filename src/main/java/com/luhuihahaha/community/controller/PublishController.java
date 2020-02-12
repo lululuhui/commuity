@@ -4,9 +4,11 @@ import com.luhuihahaha.community.mapper.QuestionMapper;
 import com.luhuihahaha.community.mapper.UserMapper;
 import com.luhuihahaha.community.model.Question;
 import com.luhuihahaha.community.model.User;
+import com.luhuihahaha.community.service.QuestionService;
 import com.luhuihahaha.community.util.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,10 @@ import java.util.HashMap;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
+
+    @Autowired
+    QuestionMapper questionMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -28,20 +33,7 @@ public class PublishController {
     private LoginUtil loginUtil;
 
     @GetMapping("/publish")
-    public String publish(HttpServletRequest request){
-/*        Cookie[] cookies = request.getCookies();
-        if (cookies!=null)
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if(user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }*/
-//        loginUtil.checkLogin(request);
+    public String publish(HttpServletRequest request, Model model){
         return "publish";
     }
 
@@ -51,7 +43,6 @@ public class PublishController {
     public HashMap doPulish(@RequestBody HashMap ques, HttpServletRequest request){
         HashMap data = new HashMap();
         if(request.getSession().getAttribute("user")==null) {
-            data.put("message","请先登入");
             data.put("info","0");
             return data;
         }
@@ -66,10 +57,48 @@ public class PublishController {
         question.setCreator(user.getId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
-        questionMapper.create(question);
-        data.put("message","发布成功");
+        questionService.createOrUpdate(question,(String) ques.get("quesId"));
         data.put("info","1");
+        System.out.println(ques.get("quesId")+"----------");
         return data;
     }
+
+    @GetMapping("/publish/{id}")
+    public String edit(){
+        return "publish";
+    }
+
+    @PostMapping("/getInfo")
+    @ResponseBody
+    public HashMap getInfo(@RequestBody HashMap map){
+        String allUrl = (String) map.get("allUrl");
+        System.out.println(allUrl);
+        HashMap<String,Object> data = new HashMap<>();
+        String[] strings = allUrl.split("/");
+        if ("publish".equals(strings[strings.length-1])){
+           data.put("status","0");
+        }else {
+            data.put("quesId",strings[strings.length-1]);
+            data.put("status","1");
+            Question question = questionMapper.findById(Integer.valueOf(strings[strings.length-1]));
+            data.put("title", question.getTitle());
+            data.put("description", question.getDescription());
+            data.put("tag", question.getTag());
+        }
+        return data;
+    }
+
+//    @PostMapping("/publish/{id}")
+//    @ResponseBody
+//    public HashMap edit(@ResponseBodyHashMap map.HttpServletRequest request ){
+//        HashMap<String,Object> data = new HashMap<>();
+//
+//        data.get("title");
+//        data.get("description");
+//        data.get("tag");
+//
+//
+//
+//    }
 
 }
