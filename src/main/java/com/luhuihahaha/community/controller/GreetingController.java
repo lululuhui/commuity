@@ -31,7 +31,7 @@ public class GreetingController {
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
 
-        loginUtil.checkLogin(request);
+//        loginUtil.checkLogin(request);
 
         PageDTO pageDto = questionService.getQuestion(page,size);
         model.addAttribute("pageDTo", pageDto);

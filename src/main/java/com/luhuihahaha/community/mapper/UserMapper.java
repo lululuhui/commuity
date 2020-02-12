@@ -19,4 +19,10 @@ public interface UserMapper {
             @Result(property = "gmtModified",column = "gmt_modified"),
     })
     User findById(@Param("creator") Integer creator);
+
+    @Select("select ACCOUNT_ID from user where ACCOUNT_ID = #{accountId}")
+    User findByAccountId(Integer accountId);
+
+    @Update("update user set token = #{token} where id = #{id}")
+    public void updateToken(@Param("token") String token,@Param("id") Integer id);
 }

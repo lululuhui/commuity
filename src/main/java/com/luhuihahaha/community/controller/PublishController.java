@@ -41,7 +41,7 @@ public class PublishController {
                     break;
                 }
             }*/
-        loginUtil.checkLogin(request);
+//        loginUtil.checkLogin(request);
         return "publish";
     }
 

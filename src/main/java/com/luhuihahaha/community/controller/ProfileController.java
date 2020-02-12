@@ -27,7 +27,8 @@ public class ProfileController {
     public String profile(@PathVariable(name = "action")String action, Model model, HttpServletRequest request,
     @RequestParam(name = "page", defaultValue = "1") Integer page,
     @RequestParam(name = "size", defaultValue = "5") Integer size){
-        User user=loginUtil.checksLogin(request);
+
+        User user = (User) request.getSession().getAttribute("user");
 
         if ("questions".equals(action)){
             model.addAttribute("section","questions");
