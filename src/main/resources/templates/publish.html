@@ -67,7 +67,7 @@
                 if (data.status=="0"){
                     console.log("发布")
                     $("#btn_publish").html("发布")
-                }
+                }else
                 if (data.status=="1"){
                     console.log("修改")
                     $("#btn_publish").html("修改")
@@ -77,10 +77,12 @@
                     $("#description").attr("placeholder",data.description)
                     $("#tag").attr("placeholder",data.tag)
                     quesId = data.quesId;
+                }else {
+                    $(location).attr('href', 'http://localhost:8080/error/帖子找不到了！！')
                 }
             },
             error:function () {
-                alert("系统传输错误！");
+                $(location).attr('href', 'http://localhost:8080/error')
             }
         });
     })
@@ -152,7 +154,7 @@
                 $(location).attr('href', 'http://localhost:8080/')
             },
             error:function () {
-                alert("系统传输错误！");
+                $(location).attr('href', 'http://localhost:8080/error')
             }
         });
     })

@@ -25,6 +25,11 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id")Integer id, HttpServletRequest request, Model model){
         QuestionDTO questionDTO = questionService.getById(id);
+        if (questionDTO==null){
+            request.getSession().setAttribute("errorMessage","帖子失踪了!!!");
+            return null;
+        }
+
         model.addAttribute("question",questionDTO);
 
         User user = loginUtil.checksLogin(request);

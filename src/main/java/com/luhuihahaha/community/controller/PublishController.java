@@ -59,7 +59,7 @@ public class PublishController {
         question.setGmtModified(question.getGmtCreate());
         questionService.createOrUpdate(question,(String) ques.get("quesId"));
         data.put("info","1");
-        System.out.println(ques.get("quesId")+"----------");
+//        System.out.println(ques.get("quesId")+"----------");
         return data;
     }
 
@@ -70,7 +70,7 @@ public class PublishController {
 
     @PostMapping("/getInfo")
     @ResponseBody
-    public HashMap getInfo(@RequestBody HashMap map){
+    public HashMap getInfo(@RequestBody HashMap map,HttpServletRequest request)  {
         String allUrl = (String) map.get("allUrl");
         System.out.println(allUrl);
         HashMap<String,Object> data = new HashMap<>();
@@ -81,6 +81,10 @@ public class PublishController {
             data.put("quesId",strings[strings.length-1]);
             data.put("status","1");
             Question question = questionMapper.findById(Integer.valueOf(strings[strings.length-1]));
+            if (question==null) {
+                request.getSession().setAttribute("errorMessage","帖子失踪了!!!");
+                throw new NullPointerException();
+            }
             data.put("title", question.getTitle());
             data.put("description", question.getDescription());
             data.put("tag", question.getTag());
@@ -88,17 +92,6 @@ public class PublishController {
         return data;
     }
 
-//    @PostMapping("/publish/{id}")
-//    @ResponseBody
-//    public HashMap edit(@ResponseBodyHashMap map.HttpServletRequest request ){
-//        HashMap<String,Object> data = new HashMap<>();
-//
-//        data.get("title");
-//        data.get("description");
-//        data.get("tag");
-//
-//
-//
-//    }
+
 
 }
