@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
-    <script src="/js/jquery-1.12.4.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
 
 </head>
 <body>
 <!--引入公共部分-->
 <div th:insert="~{commons/navigation :: nav}"></div>
+
+</nav>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
@@ -54,6 +56,7 @@
     var quesId;
 
     $(function () {
+        $("#publish_a").attr("class","hidden")
         var allUrl ={ "allUrl" : window.location.href };
         $.ajax({
             type:"post",

@@ -9,8 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 @Controller
 public class QuestionController {
@@ -32,10 +35,24 @@ public class QuestionController {
 
         model.addAttribute("question",questionDTO);
 
+        questionService.addView(id);
+
         User user = loginUtil.checksLogin(request);
         model.addAttribute("user",user);
 
         return "question";
+    }
+
+
+    @RequestMapping("/getQuestionInfo")
+    @ResponseBody
+    public HashMap getLoginInfo(HttpServletRequest request){
+        HashMap<String,Object> data = new HashMap<>();
+        User user = (User) request.getSession().getAttribute("user");
+//        System.out.println(user.toString());
+        data.put("user",user);
+        return data;
+
     }
 
 }

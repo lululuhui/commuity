@@ -87,4 +87,8 @@ public class QuestionService {
 
 
     }
+
+    public void addView(Integer id) {
+        questionMapper.addView(id);
+    }
 }

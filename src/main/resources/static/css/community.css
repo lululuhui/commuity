@@ -38,3 +38,16 @@ body{
     font-size: 13px;
     margin-bottom: 15px;
 }
+.comment{
+    margin: 10px;
+}
+.btn-comment{
+    float: right;
+    margin-bottom: 15px;
+    height: 33px;
+    width: 100px;
+
+}
+.warningMess{
+    margin-left: 10px;
+}

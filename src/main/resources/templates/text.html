@@ -10,15 +10,43 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="list-group">
-    <a href="#" class="list-group-item active">
-        Cras justo odio
-    </a>
-    <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-    <a href="#" class="list-group-item">Morbi leo risus</a>
-    <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-    <a href="#" class="list-group-item">Vestibulum at eros</a>
-</div>
 
 </body>
+<script type="application/javascript">
+
+
+    $(function () {
+        var allUrl ={ "1" : "123" ,"2" : "asdaasda" , "3" : "1" , "4" : "1" };
+        $.ajax({
+            type:"post",
+            url:"/comment",
+            async:true,
+            contentType:"application/json",
+            data:JSON.stringify(allUrl),
+            success:function(data){
+                console.log(data)
+
+                if (data.status=="0"){
+                    console.log("发布")
+                    $("#btn_publish").html("发布")
+                }else
+                if (data.status=="1"){
+                    console.log("修改")
+                    $("#btn_publish").html("修改")
+                    $("#topTitle").html("修改")
+                    $("#success").html("修改成功")
+                    $("#title").attr("placeholder",data.title)
+                    $("#description").attr("placeholder",data.description)
+                    $("#tag").attr("placeholder",data.tag)
+                    quesId = data.quesId;
+                }else {
+                }
+            },
+            error:function () {
+            }
+        });
+    })
+
+
+</script>
 </html>

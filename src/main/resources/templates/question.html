@@ -12,9 +12,12 @@
 <body>
 <!--引入公共部分-->
 <div th:insert="~{commons/navigation :: nav}"></div>
+<div th:src="${question.getUser().getId()}" id="questionUserID" class="hidden"></div>
+<div th:src="${question.getId()}" id="questionID" class="hidden"></div>
 <div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h4><span th:text="${question.getTitle()}"></span></h4>
             <span class="test-desc">
             作者: <span th:text="${question.getUser().getName()}"></span>	|
@@ -25,12 +28,26 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.getDescription()}"></div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <a th:if="${user!=null && (user.getId() == question.getCreator())}" th:href="@{'/publish/'+${question.getId()}}"><span class="glyphicon glyphicon-pencil community-menu" aria-hidden="true">编辑</span></a>
-
-
-
-
-
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded" style="height: 39px;width: 39px"  th:src="${question.user.getImg()}"/>
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h6 class="media-object span_d" style="font-size: 16px" th:text="${question.getUser().getName()}"></h6>
+                </div>
+            <textarea class="form-control comment"  id="comment" rows="6"></textarea>
+                <div class="hidden" role="alert" id="errors" >请输入回复</div>
+                <div class="hidden" role="alert" id="loginDiv" ><a target="_blank" id="login_a_div" href="
+https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect_uri=http://localhost:8080/callback&state=1
+                ">您还没有登入，请点击登入后再回复</a></div>
+                <button type="button" id="btn_comment" class="btn-comment btn-success">回复</button>
+            </div>
         </div>
+
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h4>发起人</h4>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -47,9 +64,68 @@
                     <h4>相关问题</h4>
                 </div>
             </div>
-
-
         </div>
 
 </body>
+<script type="application/javascript">
+    var coment;
+    var parentId;
+    var Img;
+    var type;
+    var commentator;
+    var user
+
+    $(function () {
+        $.ajax({
+            type:"post",
+            url:"/getQuestionInfo",
+            async:true,
+            contentType:"application/json",
+            success:function(data){
+
+                console.log(data)
+                user = data.user
+                Img = user.img;
+                commentator = user.id;
+            },
+            error:function () {
+                $(location).attr('href', 'http://localhost:8080/error')
+            }
+        })
+    });
+
+    $("#btn_comment").click(function () {
+        coment=$("#comment").val();
+        parentId = $("#questionID").attr('src');
+        type = 1;
+        if (coment==""){
+            $("#errors").attr("class","alert alert-warning warningMess");
+            return;
+        }
+        if(user==null){
+            $("#loginDiv").attr("class","alert alert-warning warningMess");
+
+            return;
+        }
+        var datas = {"content":coment,"parentId":parentId,"type":type,"commentator":commentator};
+        $.ajax({
+            type:"post",
+            url:"/comment/"+$("#questionID").attr('src'),
+            async:true,
+            contentType:"application/json",
+            data:JSON.stringify(datas),
+            success:function(data){
+                console.log("成功")
+
+            },
+            error:function () {
+            }
+        });
+    })
+
+    $("#login_a_div").click(function () {
+        window.localStorage.setItem("closeable","true");
+    })
+
+</script>
 </html>
