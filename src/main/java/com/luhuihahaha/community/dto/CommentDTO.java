@@ -12,5 +12,6 @@ public class CommentDTO {
     private Integer parentId;
     private Integer type;
     private Integer commentator;
+    private Integer parent_comm_id;
 
 }

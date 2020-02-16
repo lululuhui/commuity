@@ -49,4 +49,11 @@ public interface CommentMapper {
             @Result(property = "likeCount",column = "like_count")
     })
     List<Comment> findByParentId(Integer id);
+
+    @Insert("insert into comment(content,parent_id,type,commentator,gmt_create,gmt_modified,parent_comment_id) " +
+            "values(#{comment.content},#{comment.parentId},#{comment.type},#{comment.commentator},#{comment.gmtCreate},#{comment.gmtModified},#{comment.parent_comm_id}) ")
+    void insertTwoNew(@Param("comment") Comment comment);
+
+    @Select("select count(1) from comment where parent_comment_id = #{id}")
+    Integer countSonComment(@Param("id")Integer id);
 }

@@ -54,7 +54,6 @@ public class QuestionController {
     public HashMap getLoginInfo(HttpServletRequest request){
         HashMap<String,Object> data = new HashMap<>();
         User user = (User) request.getSession().getAttribute("user");
-//        System.out.println(user.toString());
         data.put("user",user);
         return data;
 

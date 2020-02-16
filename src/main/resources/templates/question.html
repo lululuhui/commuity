@@ -61,16 +61,17 @@
                         <span th:target="${coment.getId()}" name="likeCountBtn0"  class="icon glyphicon glyphicon-thumbs-up"></span>
                         <span th:id="${coment.getId()}"  style="margin-left: -10px" th:text="${coment.likeCount}"></span>
                         <span  style="margin-left: 10px"  class="icon glyphicon glyphicon-comment " data-status="close" onclick="getTwiceComment(this)" th:data-id="${coment.id}" ></span>
+                        <span style="margin-left: -9px;" th:id="sonComm+${coment.getId()}" th:text="${coment.getSonCommentSum()}"></span>
                         <span class="pull-right" th:text="${#dates.format(coment.getGmtModified(),'yyyy-MM-dd')}"></span>
                     </div>
                         <!--二级评论-->
                         <div style="margin: 15px" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub_comments"
                              th:id="${'comment-'+coment.id}">
-                            <div id="start_div"></div>
+                            <div th:id="${'start_div'+coment.id}" ></div>
                             <!--二级评论区-->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" placeholder="评论一下">
-                                <button type="button"  style="margin: 10px 0px" class="btn btn-success pull-right">评论</button>
+                                <input type="text" th:id="comment_two+${coment.id}" class="form-control" placeholder="评论一下">
+                                <button type="button" onclick="sendTwiceComm(this)" th:data-target="${coment.id}"  style="margin: 10px 0px" class="btn btn-success pull-right">评论</button>
                             </div>
                         </div>
                     </div>
@@ -135,7 +136,6 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
             async:true,
             contentType:"application/json",
             success:function(data){
-
                 console.log(data)
                 user = data.user
                 if (user==null)
@@ -155,8 +155,10 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
     $("#btn_comment").click(function () {
         coment=$("#comment").val();
         type = 1;
+        coment = coment.trim()
         if (coment==""){
             $("#errors").attr("class","alert alert-warning warningMess");
+            $("#comment").val("")
             return;
         }
         if(user==null){
@@ -173,11 +175,43 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
             data:JSON.stringify(datas),
             success:function(data){
                 window.location.reload();
+                $("#loginDiv").attr("class","hidden");
             },
             error:function () {
             }
         });
     })
+
+    /**
+     * 二级回复
+     */
+    function sendTwiceComm(e) {
+        type = 1;
+        var parent_comm_id = e.getAttribute("data-target")
+        coment=$("#"+"comment_two"+parent_comm_id).val();
+        coment = coment.trim()
+        if (coment==""){
+            $("#"+"comment_two"+parent_comm_id).val("")
+            alert("请输入内容在回复")
+            return;
+        }
+        var datas = {"content":coment,"parentId":parentId,"type":type,"commentator":commentator,"parent_comm_id":parent_comm_id};
+        $.ajax({
+            type:"post",
+            url:"/twoComment",
+            async:true,
+            contentType:"application/json",
+            data:JSON.stringify(datas),
+            success:function(data){
+                listTwoComment(parent_comm_id)
+                console.log("#"+"comment_two"+parent_comm_id)
+                $("#"+"comment_two"+parent_comm_id).val("")
+                $("#"+"sonComm"+parent_comm_id).val($("#"+"sonComm"+parent_comm_id).val()+1)
+            },
+            error:function () {
+            }
+        });
+    }
 
     /**
      *点击登入后标记新弹出的页面，将其关闭
@@ -194,14 +228,7 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
 
         var onclikeBtn = $(e.target)
         if (onclikeBtn.attr('name')=="likeCountBtn0") {
-            if (user == null){
-                alert("请先登入")
-                $("html,body").animate({
-                    scrollTop: 0,
-                    screenLeft: 0,
-                }, 400);
-                return;
-            }
+            if(checkLogin())return
             var datas = {"commentId":onclikeBtn.attr("target")}
             $.ajax({
                 type:"post",
@@ -218,6 +245,7 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
                 }
             })
         }else if(onclikeBtn.attr('name')=="likeCountBtn1"){
+            if(checkLogin())return
             var datas = {"commentId":onclikeBtn.attr("target")}
             $.ajax({
                 type:"post",
@@ -242,6 +270,7 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
      * @param e 回复按钮
      */
     function getTwiceComment(e) {
+        if(checkLogin()) return
         var id = e.getAttribute("data-id");
         var comments = $("#comment-"+id);
         var collapse = e.getAttribute("data-status");
@@ -250,38 +279,57 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
             comments.removeClass("in");
             e.setAttribute("data-status","close")
             e.classList.remove("active")
+
         }else {
             //展开二级评论
             comments.addClass("in")
             e.setAttribute("data-status","open")
             e.classList.add("active")
             //向二级回复模板写值并写入前端页面
-            $.ajax({
-                type:"post",
-                url:"/twiceComment/"+id,
-                async:true,
-                contentType:"application/json",
-                success:function(data){
-                    console.log(data)
-                    var comments = data.comments
-                    for (var i = 0;i<comments.length;i++){
-                        var comment_user_img = comments[i].user.img;
-                        var comment_user_name = comments[i].user.name;
-                        var comment_user_modified = new Date(comments[i].user.gmtModified);
-                        comment_user_modified = comment_user_modified.toLocaleDateString()
-                        var content = comments[i].content
-                        var datas = {name:comment_user_name,img:comment_user_img,content:content,time:comment_user_modified}
-                        var html = template("template",datas)
-                        $("#start_div").append(html)
-                    }
-                },
-                error:function () {
-                }
-            });
+            listTwoComment(id)
         }
 
     }
-
+    //向二级回复模板写值并写入前端页面
+    function listTwoComment(id) {
+        $.ajax({
+            type:"post",
+            url:"/twiceComment/"+id,
+            async:true,
+            contentType:"application/json",
+            success:function(data){
+                console.log(data)
+                var html
+                var comments = data.comments
+                if (comments.length == 0)
+                    return;
+                for (var i = 0;i<comments.length;i++){
+                    var comment_user_img = comments[i].user.img;
+                    var comment_user_name = comments[i].user.name;
+                    var comment_user_modified = new Date(comments[i].user.gmtModified);
+                    comment_user_modified = comment_user_modified.toLocaleDateString()
+                    var content = comments[i].content
+                    var datas = {name:comment_user_name,img:comment_user_img,content:content,time:comment_user_modified}
+                    html = html + template("template",datas)
+                }
+                $("#start_div"+id).html(html.split("undefined")[1])
+            },
+            error:function () {
+            }
+        });
+    }
+    //检查登入状态
+    function checkLogin() {
+        if (user == null){
+            alert("请先登入")
+            $("html,body").animate({
+                scrollTop: 0,
+                screenLeft: 0,
+            }, 400);
+            return true;
+        }
+        return false;
+    }
 </script>
 <!--二级回复模板-->
 <script id="template" type="text/html">

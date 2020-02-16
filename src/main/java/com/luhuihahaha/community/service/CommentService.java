@@ -43,7 +43,12 @@ public class CommentService {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(commentDTO.getCommentator());
-        commentMapper.insertNew(comment);
+        comment.setParent_comm_id(commentDTO.getParent_comm_id());
+        if (comment.getParent_comm_id()==null)
+            commentMapper.insertNew(comment);
+         else
+            commentMapper.insertTwoNew(comment);
+
         questionMapper.addComment(commentDTO.getParentId());
 
 
@@ -66,12 +71,14 @@ public class CommentService {
             commentListDTO.setGmtModified(comment.getGmtModified());
             commentListDTO.setParentId(comment.getParentId());
             commentListDTO.setLikeCount(comment.getLikeCount());
-            commentListDTO.setUser(userMapper.findById(commentListDTO.getParentId()));
+            commentListDTO.setUser(userMapper.findById(commentListDTO.getCommentator()));
             commentListDTO.setId(comment.getId());
+            commentListDTO.setSonCommentSum(commentMapper.countSonComment(comment.getId()));
             commentListDTOList.add(commentListDTO);
         }
         return commentListDTOList;
     }
+
 
 
 }

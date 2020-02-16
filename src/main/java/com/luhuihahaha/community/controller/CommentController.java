@@ -59,4 +59,16 @@ public class CommentController {
         return hashMap;
     }
 
+    @PostMapping("/twoComment")
+    @ResponseBody
+    public void addTwoComment(@RequestBody HashMap hashMap){
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentator((Integer) hashMap.get("commentator"));
+        commentDTO.setContent((String) hashMap.get("content"));
+        commentDTO.setParentId(-1);
+        commentDTO.setType((Integer) hashMap.get("type"));
+        commentDTO.setParent_comm_id(Integer.valueOf(hashMap.get("parent_comm_id").toString()));
+        commentService.insertNew(commentDTO);
+    }
+
 }

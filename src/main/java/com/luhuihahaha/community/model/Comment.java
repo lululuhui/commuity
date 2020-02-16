@@ -18,6 +18,6 @@ public class Comment {
     private Long gmtCreate;
     private Long gmtModified;
     private Integer likeCount;
-
+    private Integer parent_comm_id;
 
 }

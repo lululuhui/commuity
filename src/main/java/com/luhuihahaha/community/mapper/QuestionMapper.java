@@ -61,6 +61,13 @@ public interface QuestionMapper {
 
 
     @Select("select * from questions where title like '%${str}%' limit #{offset},#{size}")
+    @Results({
+        @Result(property = "gmtCreate",column = "gmt_create"),
+        @Result(property = "gmtModified",column = "gmt_modified"),
+        @Result(property = "commentCount",column = "comment_count"),
+        @Result(property = "viewCount",column = "view_count"),
+        @Result(property = "likeCount",column = "like_count")
+    })
     List<Question> search(String str, Integer offset, Integer size);
 
     @Select("select count(id) from questions where title like '%${str}%' ")
