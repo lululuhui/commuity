@@ -1,52 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="js/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="css/community.css"/>
-    <script src="js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="/js/template-web.js"></script>
 </head>
 <body>
-
+<h2>模板引擎的使用</h2>
 </body>
-<script type="application/javascript">
+</html>
+<!-- 导入js   -->
 
+<!-- 定义模板
+    type 不写 或者是 text/javascript 会被解析为 js
+    如果写成其他的内容 不会被当做js解析
+-->
+<script type="text/html" id="template">
+    <ul>
+        <li>名字{{name}}</li>
+        <li>技能{{skill}}</li>
+        <li>爱好{{habbit}}</li>
+    </ul>
+</script>
+<script>
+    var data = {
+        name:"周林林",
+        skill:"帅气!",
+        habbit:'开车'
+    };
 
-    $(function () {
-        var allUrl ={ "1" : "123" ,"2" : "asdaasda" , "3" : "1" , "4" : "1" };
-        $.ajax({
-            type:"post",
-            url:"/comment",
-            async:true,
-            contentType:"application/json",
-            data:JSON.stringify(allUrl),
-            success:function(data){
-                console.log(data)
-
-                if (data.status=="0"){
-                    console.log("发布")
-                    $("#btn_publish").html("发布")
-                }else
-                if (data.status=="1"){
-                    console.log("修改")
-                    $("#btn_publish").html("修改")
-                    $("#topTitle").html("修改")
-                    $("#success").html("修改成功")
-                    $("#title").attr("placeholder",data.title)
-                    $("#description").attr("placeholder",data.description)
-                    $("#tag").attr("placeholder",data.tag)
-                    quesId = data.quesId;
-                }else {
-                }
-            },
-            error:function () {
-            }
-        });
-    })
-
+    // 填坑
+    // 参数1 模板的id
+    // 参数2 填充的数据
+    var result = template('template',data);
+    console.log(result);
+    document.body.innerHTML = result;
 
 </script>
-</html>
+<!--
+    1.定义模板
+    2.挖坑 -起名字
+    3.填坑
+  -->

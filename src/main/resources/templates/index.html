@@ -16,12 +16,13 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> <span
-                    style="font-size: 34px">发现</span></h2>
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> <span style="font-size: 34px">发现</span></h2>
             <hr size="4px" color="black">
 
             <!--引入列表部分-->
             <div th:insert="~{commons/list :: list}"></div>
+        </div>
+        <div id="urlInfo" class="hidden" th:style="${searchStr==null?'':searchStr}"></div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>热门话题</h3>
         </div>
@@ -32,12 +33,31 @@
 <script type="application/javascript">
     $(function () {
         var closeable = window.localStorage.getItem("closeable");
-
         if (closeable=="true"){
             window.localStorage.removeItem("closeable")
             window.close();
         };
+        var aQuery = window.location.href.split("?");//取得Get参数
+        var aBuf = aQuery[1].split("&");
+        var changeUrl = $("#urlInfo").attr("style")
+        if (changeUrl!=null){
+            var aList = $("a[name='Btnses']")
+            var i = 0;
+            var z = 0;
+            for (var j= 0 ;j<aBuf.length;j++){
+                if ((aBuf[j].split("=")[0])=="searchStr") {
+                    z = j;
+                }
+            }
+            for (;i<aList.length;i++){
+                console.log(i)
+                $(aList[i]).attr("href", $(aList[i]).attr("href") + '&' + aBuf[z])
+            }
+        }
     });
+
+
+
 
 
 </script>

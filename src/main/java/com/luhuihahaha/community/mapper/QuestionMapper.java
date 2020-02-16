@@ -58,4 +58,13 @@ public interface QuestionMapper {
 
     @Update("update questions set comment_count= comment_count + 1 where id = #{id}")
     void addComment(@Param("id") Integer id);
+
+
+    @Select("select * from questions where title like '%${str}%' limit #{offset},#{size}")
+    List<Question> search(String str, Integer offset, Integer size);
+
+    @Select("select count(id) from questions where title like '%${str}%' ")
+    Integer countByStr(@Param("str") String str);
+
+
 }

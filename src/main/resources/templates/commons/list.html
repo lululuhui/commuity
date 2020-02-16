@@ -22,13 +22,13 @@
                 th:text="${#dates.format(question.getGmtModified(),'dd MMMM yyyy')}"></span></span>
         </div>
     </div>
-    <nav aria-label="Page navigation">
+    <nav aria-label="Page navigation" th:if="${pageDTo.pages.get(pageDTo.pages.size()-1)>=pageDTo.getPage()}">
         <ul class="pagination">
-            <li ><a th:if="${pageDTo.getPage()-2>1}" th:href="@{'?page='+'1'}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-            <li ><a th:if="${pageDTo.getPage()!=1}" th:href="@{'?page='+${pageDTo.getPage()-1}}" aria-label="Previous"><span aria-hidden="true">&larr;</span></a></li>
-            <li th:each="page : ${pageDTo.pages}"><a  th:text="${page}" th:href="@{'?page='+${page}}"   th:style="${pageDTo.getPage()==page?'background-color: cornflowerblue':''}" > </a> </li>
-            <li ><a th:if="${pageDTo.getPage()!=pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPage()+1}}" aria-label="Previous"><span aria-hidden="true">&rarr;</span></a></li>
-            <li ><a th:if="${pageDTo.getPage()+2<pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPageCount()}}" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+            <li ><a name="Btnses" th:if="${pageDTo.getPage()-2>1}" th:href="@{'?page='+'1'}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+            <li ><a name="Btnses" th:if="${pageDTo.getPage()!=1}" th:href="@{'?page='+${pageDTo.getPage()-1}}" aria-label="Previous"><span aria-hidden="true">&larr;</span></a></li>
+            <li  th:each="page : ${pageDTo.pages}"><a name="Btnses" th:text="${page}" th:href="@{'?page='+${page}}"   th:style="${pageDTo.getPage()==page?'background-color: cornflowerblue':''}" > </a> </li>
+            <li ><a name="Btnses" th:if="${pageDTo.getPage()!=pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPage()+1}}" aria-label="Previous"><span aria-hidden="true">&rarr;</span></a></li>
+            <li ><a name="Btnses" th:if="${pageDTo.getPage()+2<pageDTo.getPageCount()}" th:href="@{'?page='+${pageDTo.getPageCount()}}" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
         </ul>
     </nav>
 </div>

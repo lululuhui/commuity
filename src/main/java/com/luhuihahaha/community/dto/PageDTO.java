@@ -15,6 +15,7 @@ public class PageDTO {
 
     public void setPagintion(Integer totalCount, Integer page, Integer size) {
 
+
         pages = new ArrayList<>();
 
         if(totalCount % size == 0){
@@ -29,7 +30,7 @@ public class PageDTO {
             for (Integer i = 1; i <= 5; i++) {
                 this.pages.add(i);
             }
-        }else if ((page==1|page==2|page==3)&&pageCount<5){
+        }else if ((page==1|page==2|page==3|page==4)&&pageCount<5){
             for (Integer i = 1; i <= pageCount; i++) {
                 this.pages.add(i);
             }

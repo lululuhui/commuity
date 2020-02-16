@@ -6,8 +6,9 @@
     <script src="/js/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="/css/community.css"/>
     <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/template-web.js"></script>
 </head>
 <body>
 <!--引入公共部分-->
@@ -16,7 +17,9 @@
 <div th:src="${question.getId()}" id="questionID" class="hidden"></div>
 <div class="container-fluid main profile">
     <div class="row">
+        <!--左边栏-->
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <!--问题信息-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h4><span th:text="${question.getTitle()}"></span></h4>
             <span class="test-desc">
@@ -25,29 +28,75 @@
             发布时间: <span th:text="${#dates.format(question.getGmtModified(),'yyyy年M月dd日')}"></span>
             </span>
             <hr>
+            <!--问题描述-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.getDescription()}"></div>
+
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
             <a th:if="${user!=null && (user.getId() == question.getCreator())}" th:href="@{'/publish/'+${question.getId()}}"><span class="glyphicon glyphicon-pencil community-menu" aria-hidden="true">编辑</span></a>
             </div>
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <!--回复列表-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h4><span style="font-size: 25px" th:text="${question.commentCount}+'个回复'"></span></h4>
+
+                    <!--一级评论-->
+                    <div th:each="coment : ${coments}">
+                        <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="media col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" style="height: 39px;width: 39px" th:if="${coment.user!=null}"  th:src="${coment.user==null?'':coment.user.getImg()}"/>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h6 class="media-heading span_d" th:if="${coment.user!=null}" style="font-size: 16px" th:text="${coment.user==null?'':coment.user.getName()}"></h6>
+
+                        <div class="comment_list_div" th:text="${coment.content}"></div>
+                    </div>
+                    </div>
+                    <div  style="margin-left: 15px" class="menu">
+                        <span th:target="${coment.getId()}" name="likeCountBtn0"  class="icon glyphicon glyphicon-thumbs-up"></span>
+                        <span th:id="${coment.getId()}"  style="margin-left: -10px" th:text="${coment.likeCount}"></span>
+                        <span  style="margin-left: 10px"  class="icon glyphicon glyphicon-comment " data-status="close" onclick="getTwiceComment(this)" th:data-id="${coment.id}" ></span>
+                        <span class="pull-right" th:text="${#dates.format(coment.getGmtModified(),'yyyy-MM-dd')}"></span>
+                    </div>
+                        <!--二级评论-->
+                        <div style="margin: 15px" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub_comments"
+                             th:id="${'comment-'+coment.id}">
+                            <div id="start_div"></div>
+                            <!--二级评论区-->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" placeholder="评论一下">
+                                <button type="button"  style="margin: 10px 0px" class="btn btn-success pull-right">评论</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            <!--</div>-->
+            <!--回复输入区-->
+            <hr style="margin-top: 10px" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="media-left">
                     <a href="#">
-                        <img class="media-object img-rounded" style="height: 39px;width: 39px"  th:src="${question.user.getImg()}"/>
+                        <img class="media-object img-rounded" style="height: 39px;width: 39px"   th:src="${user==null?'http://www.mawen.co/images/default-avatar.png':user.getImg()}"/>
                     </a>
                 </div>
                 <div class="media-body">
-                    <h6 class="media-object span_d" style="font-size: 16px" th:text="${question.getUser().getName()}"></h6>
+                    <h6 class="media-object span_d"  style="font-size: 16px" th:text="${user==null?'匿名用户':user.getName()}"></h6>
                 </div>
-            <textarea class="form-control comment"  id="comment" rows="6"></textarea>
+                <textarea class="form-control comment"  id="comment" rows="6"></textarea>
                 <div class="hidden" role="alert" id="errors" >请输入回复</div>
                 <div class="hidden" role="alert" id="loginDiv" ><a target="_blank" id="login_a_div" href="
-https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect_uri=http://localhost:8080/callback&state=1
-                ">您还没有登入，请点击登入后再回复</a></div>
+https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect_uri=http://localhost:8080/callback&state=1">
+                    您还没有登入，请点击登入后再回复</a></div>
                 <button type="button" id="btn_comment" class="btn-comment btn-success">回复</button>
             </div>
         </div>
-
+        <!--右边栏-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h4>发起人</h4>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -61,20 +110,24 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
                     </div>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <h4>相关问题</h4>
+                    <h4 >相关问题</h4>
                 </div>
             </div>
         </div>
-
+</div>
+</div>
 </body>
 <script type="application/javascript">
-    var coment;
-    var parentId;
-    var Img;
-    var type;
-    var commentator;
-    var user
-
+    var coment;     //回复内容
+    var parentId;   //问题id
+    var Img;        //回复人的头像
+    var type;       //评论等级
+    var commentator;//评论人的id
+    var user        //当前登入用户信息
+    parentId = $("#questionID").attr('src')
+    /**
+     *获取当前问题信息
+     */
     $(function () {
         $.ajax({
             type:"post",
@@ -85,6 +138,8 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
 
                 console.log(data)
                 user = data.user
+                if (user==null)
+                    return
                 Img = user.img;
                 commentator = user.id;
             },
@@ -94,9 +149,11 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
         })
     });
 
+    /**
+     * 对输入的回复进行校验，并检查登入状态
+     */
     $("#btn_comment").click(function () {
         coment=$("#comment").val();
-        parentId = $("#questionID").attr('src');
         type = 1;
         if (coment==""){
             $("#errors").attr("class","alert alert-warning warningMess");
@@ -115,17 +172,134 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
             contentType:"application/json",
             data:JSON.stringify(datas),
             success:function(data){
-                console.log("成功")
-
+                window.location.reload();
             },
             error:function () {
             }
         });
     })
 
+    /**
+     *点击登入后标记新弹出的页面，将其关闭
+     */
     $("#login_a_div").click(function () {
         window.localStorage.setItem("closeable","true");
     })
 
+
+    /**
+     * 实现点赞功能
+     */
+    $(document).click(function (e) {
+
+        var onclikeBtn = $(e.target)
+        if (onclikeBtn.attr('name')=="likeCountBtn0") {
+            if (user == null){
+                alert("请先登入")
+                $("html,body").animate({
+                    scrollTop: 0,
+                    screenLeft: 0,
+                }, 400);
+                return;
+            }
+            var datas = {"commentId":onclikeBtn.attr("target")}
+            $.ajax({
+                type:"post",
+                url:"/addLikeCount",
+                async:true,
+                contentType:"application/json",
+                data:JSON.stringify(datas),
+                success:function(data){
+                    var commentid = onclikeBtn.attr("target");
+                    $("#"+commentid).html(data.likeCount)
+                    onclikeBtn.attr("name","likeCountBtn1")
+                },
+                error:function () {
+                }
+            })
+        }else if(onclikeBtn.attr('name')=="likeCountBtn1"){
+            var datas = {"commentId":onclikeBtn.attr("target")}
+            $.ajax({
+                type:"post",
+                url:"/reduceLikeCount",
+                async:true,
+                contentType:"application/json",
+                data:JSON.stringify(datas),
+                success:function(data){
+                    var commentid = onclikeBtn.attr("target");
+                    $("#"+commentid).html(data.likeCount)
+                    onclikeBtn.attr("name","likeCountBtn0")
+                },
+                error:function () {
+                }
+            })
+        }
+    })
+
+    /**
+     * 展开或收起二级评论 加载二级回复
+     *
+     * @param e 回复按钮
+     */
+    function getTwiceComment(e) {
+        var id = e.getAttribute("data-id");
+        var comments = $("#comment-"+id);
+        var collapse = e.getAttribute("data-status");
+        if(collapse=="open"){
+            //折叠二级评论
+            comments.removeClass("in");
+            e.setAttribute("data-status","close")
+            e.classList.remove("active")
+        }else {
+            //展开二级评论
+            comments.addClass("in")
+            e.setAttribute("data-status","open")
+            e.classList.add("active")
+            //向二级回复模板写值并写入前端页面
+            $.ajax({
+                type:"post",
+                url:"/twiceComment/"+id,
+                async:true,
+                contentType:"application/json",
+                success:function(data){
+                    console.log(data)
+                    var comments = data.comments
+                    for (var i = 0;i<comments.length;i++){
+                        var comment_user_img = comments[i].user.img;
+                        var comment_user_name = comments[i].user.name;
+                        var comment_user_modified = new Date(comments[i].user.gmtModified);
+                        comment_user_modified = comment_user_modified.toLocaleDateString()
+                        var content = comments[i].content
+                        var datas = {name:comment_user_name,img:comment_user_img,content:content,time:comment_user_modified}
+                        var html = template("template",datas)
+                        $("#start_div").append(html)
+                    }
+                },
+                error:function () {
+                }
+            });
+        }
+
+    }
+
 </script>
+<!--二级回复模板-->
+<script id="template" type="text/html">
+
+    <div class="media col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+        <div class="media-left">
+                <img class="media-object img-rounded" style="height: 39px;width: 39px" src="{{img}}"/>
+        </div>
+        <div class="media-body">
+            <h6 class="media-heading span_d" style="font-size: 16px" >{{name}}</h6>
+
+            <div class="comment_list_div">{{content}}</div>
+        </div>
+        <span class="pull-right">{{time}}</span>
+        <hr class="col-lg-12">
+    </div>
+
+
+</script>
+
 </html>

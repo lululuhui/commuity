@@ -1,6 +1,7 @@
 package com.luhuihahaha.community.controller;
 
 import com.luhuihahaha.community.dto.PageDTO;
+import com.luhuihahaha.community.dto.QuestionDTO;
 import com.luhuihahaha.community.model.User;
 import com.luhuihahaha.community.service.QuestionService;
 import com.luhuihahaha.community.util.LoginUtil;
@@ -38,10 +39,19 @@ public class ProfileController {
             model.addAttribute("sectionName","最新回复");
         }
 
+        if (user==null){
+            return "redirect:/";
+        }
 
 
         PageDTO pageDto = questionService.list(user.getId(),page,size);
+        Integer sum = 0;
+        for (QuestionDTO questionDTO:pageDto.getQuestionDTOS()
+             ) {
+          sum = sum + questionDTO.getCommentCount();
+        };
         model.addAttribute("pageDTo", pageDto);
+        model.addAttribute("sum",sum);
 
         return "profile";
     }

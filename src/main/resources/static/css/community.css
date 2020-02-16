@@ -41,6 +41,13 @@ body{
 .comment{
     margin: 10px;
 }
+
+.sub_comments{
+    border-radius: 5px;
+    border: 1px solid #eee;
+    padding-top: 20px;
+}
+
 .btn-comment{
     float: right;
     margin-bottom: 15px;
@@ -50,4 +57,33 @@ body{
 }
 .warningMess{
     margin-left: 10px;
+}
+
+.comment_list_div{
+/*    position: relative;
+    top: -20px;
+    right: -15px;
+    font-size: 18px;*/
+    font-size: 21px;
+/*    margin-top: -34px;
+
+    margin-left: 40px;*/
+}
+.menu{
+    color: #999;
+    margin-top: -15px;
+
+}
+.menu .icon{
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.menu .active{
+    color: #499ef3;
+}
+
+.menu .icon:hover{
+    color: #499ef3;
 }

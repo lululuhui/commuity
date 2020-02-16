@@ -12,12 +12,13 @@
 
 </head>
 <body>
-<!--引入公共部分-->
+<!--引入公共部分 头部份-->
 <div th:insert="~{commons/navigation :: nav}"></div>
 
 </nav>
 <div class="container-fluid main">
     <div class="row">
+        <!--左边信息栏-->
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <span style="font-size: 36px" id="topTitle">发起</span></h2>
             <hr size="4px" color="black">
@@ -42,6 +43,8 @@
                 <button type="submit" class="btn btn-success btn-publish" id="btn_publish" ></button>
 
         </div>
+
+        <!--右边信息栏-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>
             •问题标题：请用简介的语言描述您发布的问题，不超过50字</br>

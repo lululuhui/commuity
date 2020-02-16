@@ -6,6 +6,8 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/error")
 public class CustomizeExceptionHandler implements ErrorController {
@@ -16,7 +18,8 @@ public class CustomizeExceptionHandler implements ErrorController {
     }
 
     @RequestMapping
-    public String error() {
+    public String error(HttpServletRequest request) {
+        request.getSession().setAttribute("errorMessage",request.getSession().getAttribute("errorMessage"));
         return getErrorPath();
     }
 }
