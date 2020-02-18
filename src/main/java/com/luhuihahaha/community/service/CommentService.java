@@ -1,10 +1,10 @@
 package com.luhuihahaha.community.service;
 
+import com.luhuihahaha.community.dao.CommentDao;
+import com.luhuihahaha.community.dao.QuestionDao;
+import com.luhuihahaha.community.dao.UserDao;
 import com.luhuihahaha.community.dto.CommentDTO;
 import com.luhuihahaha.community.dto.CommentListDTO;
-import com.luhuihahaha.community.mapper.CommentMapper;
-import com.luhuihahaha.community.mapper.QuestionMapper;
-import com.luhuihahaha.community.mapper.UserMapper;
 import com.luhuihahaha.community.model.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,27 +15,28 @@ import java.util.List;
 @Service
 public class CommentService {
 
-    @Autowired
-    private CommentMapper commentMapper;
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private CommentDao commentDao;
 
     @Autowired
-    private UserMapper userMapper;
+    private QuestionDao questionDao;
+
+    @Autowired
+    private UserDao userDao;
 
     public  Integer addLikeCount(Integer commentId) {
-        commentMapper.addLikeCount(commentId);
-        Comment comment = commentMapper.findByCommentId(commentId);
+        commentDao.changeCount(true, commentId);
+        Comment comment = commentDao.findByCommentId(commentId);
         return comment.getLikeCount();
     }
     public Integer reduceLikeCount(Integer commentId) {
-        commentMapper.reduceLikeCount(commentId);
-        Comment comment = commentMapper.findByCommentId(commentId);
+        commentDao.changeCount(false, commentId);
+        Comment comment = commentDao.findByCommentId(commentId);
         return comment.getLikeCount();
     }
 
-    public void insertNew(CommentDTO commentDTO) {
+    public void insertNew(boolean type, CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
         comment.setType(commentDTO.getType());
@@ -43,13 +44,10 @@ public class CommentService {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(commentDTO.getCommentator());
-        comment.setParent_comm_id(commentDTO.getParent_comm_id());
-        if (comment.getParent_comm_id()==null)
-            commentMapper.insertNew(comment);
-         else
-            commentMapper.insertTwoNew(comment);
-
-        questionMapper.addComment(commentDTO.getParentId());
+        comment.setParentCommentId(commentDTO.getParent_comm_id());
+        commentDao.insertComment(comment);
+        if (type)
+            questionDao.addQuestionCount("comment", commentDTO.getParentId());
 
 
     }
@@ -59,9 +57,9 @@ public class CommentService {
         List<CommentListDTO> commentListDTOList = new ArrayList<>();
         List<Comment> commentList = null;
         if ("question".equals(str)){
-            commentList = commentMapper.findByQuestionId(id);
+            commentList = commentDao.findByQuestionId(id);
         }else if ("comment".equals(str)) {
-            commentList = commentMapper.findByParentId(id);
+            commentList = commentDao.findByParentId(id);
         }
         for (Comment comment: commentList) {
             CommentListDTO commentListDTO = new CommentListDTO();
@@ -71,9 +69,9 @@ public class CommentService {
             commentListDTO.setGmtModified(comment.getGmtModified());
             commentListDTO.setParentId(comment.getParentId());
             commentListDTO.setLikeCount(comment.getLikeCount());
-            commentListDTO.setUser(userMapper.findById(commentListDTO.getCommentator()));
+            commentListDTO.setUser(userDao.findUserById(commentListDTO.getCommentator()));
             commentListDTO.setId(comment.getId());
-            commentListDTO.setSonCommentSum(commentMapper.countSonComment(comment.getId()));
+            commentListDTO.setSonCommentSum(commentDao.countSonComment(comment.getId()));
             commentListDTOList.add(commentListDTO);
         }
         return commentListDTOList;

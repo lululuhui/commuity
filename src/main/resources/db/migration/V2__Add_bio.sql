@@ -1,1 +1,0 @@
-ALTER TABLE user add bio varchar(255);

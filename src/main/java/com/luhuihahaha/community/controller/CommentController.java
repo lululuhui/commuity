@@ -43,11 +43,10 @@ public class CommentController {
         commentDTO.setContent((String) hashMap.get("content"));
         commentDTO.setParentId(Integer.valueOf(hashMap.get("parentId").toString()));
         commentDTO.setType((Integer) hashMap.get("type"));
-        commentService.insertNew(commentDTO);
+        commentService.insertNew(true, commentDTO);
     }
 
     /**
-     * @param hashMap 前端传来的的信息集合
      * @param id 父评论id
      */
     @PostMapping("/twiceComment/{id}")
@@ -68,7 +67,7 @@ public class CommentController {
         commentDTO.setParentId(-1);
         commentDTO.setType((Integer) hashMap.get("type"));
         commentDTO.setParent_comm_id(Integer.valueOf(hashMap.get("parent_comm_id").toString()));
-        commentService.insertNew(commentDTO);
+        commentService.insertNew(false, commentDTO);
     }
 
 }

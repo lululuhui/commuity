@@ -11,7 +11,7 @@ public interface QuestionMapper {
     @Insert("insert into questions(title,description,gmt_create,gmt_modified,creator,tag) values (#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})")
     public void create(Question question);
 
-    @Select("select * from questions limit #{offset},#{size}")
+    @Select("select * from questions order by gmt_Modified desc limit #{offset},#{size} ")
     @Results({
             @Result(property = "gmtCreate",column = "gmt_create"),
             @Result(property = "gmtModified",column = "gmt_modified"),

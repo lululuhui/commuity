@@ -206,7 +206,7 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
                 listTwoComment(parent_comm_id)
                 console.log("#"+"comment_two"+parent_comm_id)
                 $("#"+"comment_two"+parent_comm_id).val("")
-                $("#"+"sonComm"+parent_comm_id).val($("#"+"sonComm"+parent_comm_id).val()+1)
+                $("#" + "sonComm" + parent_comm_id).html(parseInt($("#" + "sonComm" + parent_comm_id).html()) + 1)
             },
             error:function () {
             }
@@ -218,6 +218,7 @@ https://github.com/login/oauth/authorize?client_id=c494843e8c873fa98a13&redirect
      */
     $("#login_a_div").click(function () {
         window.localStorage.setItem("closeable","true");
+        window.location.reload();
     })
 
 

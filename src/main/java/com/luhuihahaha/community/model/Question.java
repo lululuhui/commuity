@@ -1,7 +1,13 @@
 package com.luhuihahaha.community.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("questions")
 public class Question {
 
+    @TableId(type = IdType.AUTO)
     private int id;
     private String title;
     private String description;

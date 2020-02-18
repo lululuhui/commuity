@@ -1,8 +1,8 @@
 package com.luhuihahaha.community.controller;
 
+import com.luhuihahaha.community.dao.UserDao;
 import com.luhuihahaha.community.dto.AccessTokenDTO;
 import com.luhuihahaha.community.dto.GithubUser;
-import com.luhuihahaha.community.mapper.UserMapper;
 import com.luhuihahaha.community.model.User;
 import com.luhuihahaha.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class AuthorizeController {
     private String githubRedirectUri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -51,7 +51,7 @@ public class AuthorizeController {
         if (githubUser != null) {
             //登入成功 加入cookies,session
             String token = null;
-            if (userMapper.findByAccountId(githubUser.getId().intValue())==null){
+            if (userDao.findUserByCondition("accountId", githubUser.getId().toString()) == null) {
                 User user = new User();
                 user.setName(githubUser.getLogin());
                 user.setAccountId(String.valueOf(githubUser.getId()));
@@ -60,9 +60,9 @@ public class AuthorizeController {
                 user.setToken(token);
                 user.setGmtCreate(System.currentTimeMillis());
                 user.setGmtModified(user.getGmtCreate());
-                userMapper.insertUser(user);
+                userDao.insertUser(user);
             }else{
-                token=userMapper.findByAccountId(githubUser.getId().intValue()).getToken();
+                token = userDao.findUserByCondition("accountId", githubUser.getId().toString()).getToken();
             }
 
 //            request.getSession().setAttribute("user", githubUser);

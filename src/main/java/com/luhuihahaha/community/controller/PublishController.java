@@ -1,11 +1,9 @@
 package com.luhuihahaha.community.controller;
 
-import com.luhuihahaha.community.mapper.QuestionMapper;
-import com.luhuihahaha.community.mapper.UserMapper;
+import com.luhuihahaha.community.dao.QuestionDao;
 import com.luhuihahaha.community.model.Question;
 import com.luhuihahaha.community.model.User;
 import com.luhuihahaha.community.service.QuestionService;
-import com.luhuihahaha.community.util.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +22,8 @@ public class PublishController {
     private QuestionService questionService;
 
     @Autowired
-    QuestionMapper questionMapper;
+    private QuestionDao questionDao;
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private LoginUtil loginUtil;
 
     @GetMapping("/publish")
     public String publish(HttpServletRequest request, Model model){
@@ -80,7 +73,7 @@ public class PublishController {
         }else {
             data.put("quesId",strings[strings.length-1]);
             data.put("status","1");
-            Question question = questionMapper.findById(Integer.valueOf(strings[strings.length-1]));
+            Question question = questionDao.findQuestionById(Integer.valueOf(strings[strings.length - 1]));
             if (question==null) {
                 request.getSession().setAttribute("errorMessage","帖子失踪了!!!");
                 throw new NullPointerException();

@@ -1,6 +1,6 @@
 package com.luhuihahaha.community.interceptors;
 
-import com.luhuihahaha.community.mapper.UserMapper;
+import com.luhuihahaha.community.dao.UserDao;
 import com.luhuihahaha.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
 
     private Model model;
 
@@ -28,7 +28,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             for(Cookie cookie : cookies){
                 if(cookie.getName().equals("token")){
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
+                    User user = userDao.findUserByCondition("token", token);
                     if(user != null){
                         request.getSession().setAttribute("user",user);
                     }
